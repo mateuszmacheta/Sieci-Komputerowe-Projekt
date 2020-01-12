@@ -33,10 +33,76 @@ default-router 10.11.51.254
 dns-server 172.16.0.1
 network 10.11.51.0 255.255.255.0
 
-# TELNET + FTP settings
+# TELNET + FTP settings, FTP server address: 10.11.49.2
 
 username mm privilege 15 password 0 mm
 username lo privilege 15 password 0 lo
 line vty 0 15
 login local
+ip ftp username mm
+ip ftp password mm
 
+# blokujemy mo¿lowiœæ zarz¹dzania switchami z sieci innych ni¿ vlan500
+# bud P, router0 , int gi0/1-601
+
+ip access-list extended BLOCK_kMGMT
+deny ip 10.11.52.0 0.0.0.63 10.11.48.0 0.0.0.255
+deny ip 10.11.52.0 0.0.0.63 10.11.49.0 0.0.0.255
+deny ip 10.11.52.64 0.0.0.63 10.11.48.0 0.0.0.255
+deny ip 10.11.52.64 0.0.0.63 10.11.49.0 0.0.0.255
+deny ip 10.11.52.128 0.0.0.31 10.11.48.0 0.0.0.255
+deny ip 10.11.52.128 0.0.0.31 10.11.49.0 0.0.0.255
+deny ip 10.11.52.160 0.0.0.31 10.11.48.0 0.0.0.255
+deny ip 10.11.52.160 0.0.0.31 10.11.49.0 0.0.0.255
+permit ip any any
+
+int gi0/1.10
+ip access-group BLOCK_kMGMT in
+
+int gi0/1.20
+ip access-group BLOCK_kMGMT in
+
+int gi0/1.600
+ip access-group BLOCK_kMGMT in
+
+int gi0/1.601
+ip access-group BLOCK_kMGMT in
+
+ip access-list extended ALLOW-kMGMT
+permit ip 10.11.48.0 0.0.0.255 any
+permit ip 10.11.49.0 0.0.0.255 any
+
+line vty 0 15
+access-class ALLOW-kMGMT in
+
+
+# bud G³ówny, router1
+ip access-list extended BLOCK_kMGMT
+deny ip 10.11.50.0 0.0.0.255 10.11.48.0 0.0.0.255
+deny ip 10.11.50.0 0.0.0.255 10.11.49.0 0.0.0.255
+deny ip 10.11.51.0 0.0.0.255 10.11.48.0 0.0.0.255
+deny ip 10.11.51.0 0.0.0.255 10.11.49.0 0.0.0.255
+deny ip 10.11.52.192 0.0.0.31 10.11.48.0 0.0.0.255
+deny ip 10.11.52.192 0.0.0.31 10.11.49.0 0.0.0.255
+deny ip 10.11.52.224 0.0.0.31 10.11.48.0 0.0.0.255
+deny ip 10.11.52.224 0.0.0.31 10.11.49.0 0.0.0.255
+permit ip any any
+
+int gi0/1.10
+ip access-group BLOCK_kMGMT in
+
+int gi0/1.20
+ip access-group BLOCK_kMGMT in
+
+int gi0/1.600
+ip access-group BLOCK_kMGMT in
+
+int gi0/1.601
+ip access-group BLOCK_kMGMT in
+
+ip access-list extended ALLOW-kMGMT
+permit ip 10.11.48.0 0.0.0.255 any
+permit ip 10.11.49.0 0.0.0.255 any
+
+line vty 0 15
+access-class ALLOW-kMGMT in
