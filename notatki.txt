@@ -1,0 +1,34 @@
+# DHCP
+
+# router0
+
+ip dhcp excluded-address 10.11.52.62
+ip dhcp excluded-address 10.11.52.126
+
+
+ip dhcp pool vlan10
+default-router 10.11.52.62
+dns-server 172.16.0.1
+network 10.11.52.0 255.255.255.192
+
+ip dhcp pool vlan20
+default-router 10.11.52.126
+dns-server 172.16.0.1
+network 10.11.52.64 255.255.255.192
+
+
+
+# router1
+
+ip dhcp excluded-address 10.11.50.254
+ip dhcp excluded-address 10.11.51.254
+
+ip dhcp pool vlan10
+default-router 10.11.50.254
+dns-server 172.16.0.1
+network 10.11.50.0 255.255.255.0
+
+ip dhcp pool vlan20
+default-router 10.11.51.254
+dns-server 172.16.0.1
+network 10.11.51.0 255.255.255.0
