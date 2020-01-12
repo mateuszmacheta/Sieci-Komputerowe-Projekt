@@ -32,3 +32,11 @@ ip dhcp pool vlan20
 default-router 10.11.51.254
 dns-server 172.16.0.1
 network 10.11.51.0 255.255.255.0
+
+# TELNET
+
+username mm privilege 15 password 0 mm
+username lo privilege 15 password 0 lo
+
+line vty 0 15
+login local
